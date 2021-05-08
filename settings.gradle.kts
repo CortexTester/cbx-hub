@@ -1,3 +1,3 @@
-rootProject.name = "parent"
+rootProject.name = "cbx-hub"
 include("api")
 include("common")
