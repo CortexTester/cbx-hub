@@ -37,7 +37,11 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("org.springframework.boot:spring-boot-configuration-processor")
+        implementation("org.springframework.kafka:spring-kafka")
         developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+        implementation("org.springframework.boot:spring-boot-starter-cache")
+        implementation("com.github.ben-manes.caffeine:caffeine")
 //        annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 //        kapt("org.springframework.boot:spring-boot-configuration-processor")
         testImplementation("org.springframework.boot:spring-boot-starter-test"){
