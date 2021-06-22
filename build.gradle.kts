@@ -29,6 +29,7 @@ subprojects {
         plugin("org.springframework.boot")
         plugin("org.jetbrains.kotlin.plugin.spring")
         plugin("org.jetbrains.kotlin.jvm")
+//        plugin("plugin.allopen")
     }
 
     dependencies {

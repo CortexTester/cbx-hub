@@ -1,6 +1,8 @@
 package cbx.hub.routing.config
 
 import com.zaxxer.hikari.HikariDataSource
+import org.hibernate.boot.SchemaAutoTooling
+import org.hibernate.cfg.AvailableSettings
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -22,7 +24,7 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @PropertySource(value = ["routing.properties"])
 @EnableJpaRepositories(
-    basePackages = ["cbx.hub.routing"],
+    basePackages = ["cbx.hub.routing.repository"],
     entityManagerFactoryRef = "routingEntityManagerFactory",
     transactionManagerRef = "routingTransactionManager"
 )
@@ -47,34 +49,22 @@ class RoutingDataSourceConfiguration (){
     fun entityManagerFactory(
         builder: EntityManagerFactoryBuilder, @Qualifier("routingDataSource") dataSource: DataSource?
     ): LocalContainerEntityManagerFactoryBean? {
+        val properties: MutableMap<String, Any> = HashMap()
+        properties[AvailableSettings.HBM2DDL_AUTO] = "create-drop" //```````````````+SchemaAutoTooling.CREATE.name.toLowerCase()
+        properties[AvailableSettings.DIALECT] = "org.hibernate.dialect.PostgreSQLDialect"
         return builder
             .dataSource(dataSource)
+            .properties(properties)
             .packages("cbx.hub.routing")
+            .persistenceUnit("party")
             .build()
     }
 
+    @Primary
     @Bean(name = ["routingTransactionManager"])
     fun transactionManager(
         @Qualifier("routingEntityManagerFactory") entityManagerFactory: EntityManagerFactory?
     ): PlatformTransactionManager? {
         return JpaTransactionManager(entityManagerFactory!!)
     }
-
-//    @Bean
-//    fun routingEntityManager(): LocalContainerEntityManagerFactoryBean =
-//        (LocalContainerEntityManagerFactoryBean()).apply {
-//            dataSource = routingDataSource()
-//            setPackagesToScan("cbx.hub.routing")
-//            jpaVendorAdapter = HibernateJpaVendorAdapter()
-//            val properties = HashMap<String, Any?>()
-////            properties["hibernate.hbm2ddl.auto"] = env.getProperty("hibernate.hbm2ddl.auto")
-//
-//            properties["hibernate.dialect"] = "org.hibernate.dialect.PostgreSQLDialect" //env.getProperty("hibernate.dialect")
-////            properties["driver-class-name"] = "org.postgresql.Driver"
-////            properties["hibernate.hbm2ddl.auto"] = "create"
-////            setJpaPropertyMap(properties)
-//        }
-//
-//    @Bean
-//    fun routingTransactionManager() = JpaTransactionManager(routingEntityManager().`object`!!)
 }

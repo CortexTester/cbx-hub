@@ -38,7 +38,7 @@ class TestController() {
 
     @GetMapping("/test")
     fun test(principal: Principal) : String {
-        val registryId = routingService.addPartyToRegistry("test party", 1001, "UBL2.0", "http://localhost:8081" )
+        val registryId = routingService.addPartyToRegistry("test party", 1001, 1, "http://localhost:8081", "testKey8" )
         val eventId = eventService.addEvent(1, 2, "UBL2.0", 1, "http://aws/storage/1" )
         val party = (principal as PartyAuthenticationToken)?.party
         logger().info(party.toString())
